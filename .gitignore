@@ -1,0 +1,24 @@
+# Environnement virtuel : recréable avec uv, ne doit jamais être versionné
+.venv/
+
+# Secrets (clé API, URL de base de données, token Hugging Face)
+.env
+
+# Données brutes Home Credit : volumineuses et assimilées à des données clients
+data/
+
+# Suivi MLflow local : le modèle utile sera exporté dans model/
+mlruns/
+mlartifacts/
+
+# Caches Python et Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Fichiers système et éditeur
+.DS_Store
+.vscode/
