@@ -1,0 +1,14 @@
+# Bibliothèques du modèle : versions identiques au Projet 6 (rechargement fidèle du modèle)
+lightgbm==4.6.0
+scikit-learn==1.8.0
+mlflow==3.12.0
+pandas==2.3.3
+numpy==2.4.6
+
+# API
+fastapi==0.143.0
+uvicorn==0.54.0
+pydantic==2.14.0
+
+# Scripts de test manuel de l'API
+requests==2.34.2
