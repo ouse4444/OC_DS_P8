@@ -1,0 +1,1 @@
+"""API de scoring crédit de Prêt à Dépenser."""

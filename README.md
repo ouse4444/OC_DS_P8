@@ -69,7 +69,7 @@ Le modèle exporté a été vérifié : il reproduit à l'identique la matrice d
 
 ```
 OC_DS_P8/
-├── api/                  API FastAPI et interface Gradio (à venir)
+├── api/                  API FastAPI (dossier de déploiement)
 ├── data/processed/       données de référence (locales, non versionnées)
 ├── docs/                 documentation et captures d'écran
 ├── model/                modèle exporté depuis MLflow
@@ -77,7 +77,8 @@ OC_DS_P8/
 ├── notebooks/            notebooks d'analyse
 ├── scripts/              scripts utilitaires
 ├── src/credit_scoring/   code source du Projet 6
-└── tests/                tests automatisés (à venir)
+├── tests/                tests automatisés (à venir)
+└── requirements.txt      dépendances, versions figées
 ```
 
 ## Installation
@@ -104,11 +105,36 @@ python scripts/build_reference_data.py --zip-path chemin/vers/home-credit-defaul
 
 Résultat attendu : 307 511 clients, 201 colonnes, taux de défaut de 8,07 %.
 
+## Lancer l'API en local
+
+```bash
+pip install -r requirements.txt
+uvicorn api.main:app --reload
+```
+
+Documentation interactive (Swagger) : http://127.0.0.1:8000/docs
+
+| Route | Rôle |
+|---|---|
+| `GET /` | Message d'accueil |
+| `GET /health` | État de l'API et du modèle |
+| `GET /features` | Liste des 199 variables acceptées |
+| `POST /predict` | Probabilité de défaut et décision (seuil 0,36) |
+
+Le modèle est chargé une seule fois, au démarrage de l'API. Les entrées sont validées : cinq champs obligatoires (type de contrat, genre, revenu, montant du crédit, âge), des champs bornés, et un contrôle du nom et du type des autres variables. Une donnée invalide est rejetée avec un code 422 et un message explicite. Les variables non transmises sont imputées par le pipeline, comme à l'entraînement.
+
+Pour vérifier l'API sur de vrais clients (nécessite les données de référence) :
+
+```bash
+python scripts/export_sample_clients.py    # extrait 10 clients du jeu de test du Projet 6
+python scripts/test_api_local.py           # l'API doit être lancée dans un autre terminal
+```
+
 ## Avancement
 
 - [x] Phase 0 : dépôt, environnement, modèle exporté et vérifié, données de référence
 - [x] Phase 1 : README et architecture
-- [ ] Phase 2 : API FastAPI et interface Gradio
+- [x] Phase 2 : API FastAPI testée en local (interface Gradio à venir)
 - [ ] Phase 3 : tests automatisés
 - [ ] Phase 4 : conteneurisation Docker
 - [ ] Phase 5 : intégration continue
