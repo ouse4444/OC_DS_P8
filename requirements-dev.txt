@@ -1,0 +1,6 @@
+# Dépendances de développement et de test (non installées dans l'image de production)
+-r requirements.txt
+
+pytest==9.2.0
+pytest-cov==7.1.0
+httpx==0.28.1
