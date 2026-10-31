@@ -10,5 +10,8 @@ fastapi==0.143.0
 uvicorn==0.54.0
 pydantic==2.14.0
 
+# Interface de démonstration
+gradio==6.31.0
+
 # Scripts de test manuel de l'API
 requests==2.34.2
