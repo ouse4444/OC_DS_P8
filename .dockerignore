@@ -1,0 +1,29 @@
+# Environnement virtuel local : l'image installe ses propres bibliothèques
+.venv/
+
+# Données clients : elles ne doivent jamais se retrouver dans une image
+data/
+
+# Secrets
+.env
+
+# Éléments inutiles pour faire tourner l'API
+notebooks/
+scripts/
+tests/
+docs/
+monitoring/
+src/
+mlruns/
+*.ipynb
+
+# Git, caches et fichiers système
+.git/
+.github/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store
+.vscode/
