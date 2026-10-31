@@ -19,6 +19,11 @@ from api.config import ENGINEERED_FEATURES
 # avertissement, sans conséquence, est masqué pour ne pas encombrer les journaux.
 warnings.filterwarnings("ignore", message="X does not have valid feature names")
 
+# Avertissement de pandas émis par la classe ConstructeurFeatures du Projet 6, enregistrée
+# dans le modèle. Sans effet avec la version figée de pandas : il est masqué pour garder
+# des journaux de production lisibles.
+warnings.filterwarnings("ignore", message="Downcasting behavior", category=FutureWarning)
+
 
 class CreditScoringModel:
     """Enveloppe autour du pipeline du Projet 6 (préparation des variables, puis LightGBM)."""
