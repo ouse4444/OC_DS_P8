@@ -32,3 +32,8 @@ ENGINEERED_FEATURES = [
     "AGE_ANNEES",
     "ANCIENNETE_EMPLOI_ANNEES",
 ]
+# Base de données des prédictions de production (PostgreSQL sur Azure).
+# Exemple : postgresql+psycopg://user:password@host:5432/monitoring?sslmode=require
+# Absente : les prédictions sont seulement écrites dans les journaux.
+# C'est un secret : il est fourni par l'environnement, jamais écrit dans le code.
+DATABASE_URL = os.getenv("DATABASE_URL")
