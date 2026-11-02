@@ -1,7 +1,8 @@
 # Dépendances de développement et de test (non installées dans les images de production)
-# L'API et l'interface sont testées ensemble dans le pipeline
+# L'API, l'interface et le tableau de bord sont testés ensemble dans le pipeline
 -r requirements.txt
 -r ui/requirements.txt
+-r dashboard/requirements.txt
 
 pytest==9.2.0
 pytest-cov==7.1.0

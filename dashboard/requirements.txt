@@ -1,0 +1,9 @@
+# Dépendances du tableau de bord uniquement : il n'a besoin ni du modèle, ni de MLflow,
+# ni de LightGBM. Versions alignées sur celles du projet
+streamlit==1.66.1
+pandas==2.3.3
+numpy==2.4.6
+sqlalchemy==2.1.6
+psycopg[binary]==3.3.6
+requests==2.34.2
+python-dotenv==1.2.4
