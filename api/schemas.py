@@ -60,6 +60,7 @@ class ClientData(BaseModel):
 class PredictionResponse(BaseModel):
     """Réponse de l'API : le schéma valide aussi les sorties avant leur envoi."""
 
+    request_id: str = Field(..., description="Unique identifier of the request, also stored in the prediction log")
     probability_default: float = Field(..., ge=0, le=1, description="Probability of default")
     decision: Literal["accepted", "refused"] = Field(..., description="Credit decision")
     threshold: float = Field(..., description="Decision threshold used")
@@ -75,3 +76,6 @@ class HealthResponse(BaseModel):
     model_loaded: bool
     model_name: str
     model_version: str
+    prediction_storage: Literal["database", "logs"] = Field(
+        ..., description="Where prediction events are stored"
+    )

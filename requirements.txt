@@ -14,3 +14,8 @@ uvicorn==0.54.0
 pydantic==2.14.0
 # Starlette est figée explicitement : MLflow 3.12 exige starlette<1.0
 starlette==0.52.1
+
+# Stockage des prédictions de production (PostgreSQL). SQLAlchemy est déjà installée
+# par MLflow : la version est alignée pour éviter tout conflit
+sqlalchemy==2.1.6
+psycopg[binary]==3.3.6
