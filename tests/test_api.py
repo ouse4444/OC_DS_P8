@@ -95,3 +95,16 @@ def test_predict_returns_503_when_model_unavailable(client, valid_payload, monke
     monkeypatch.delitem(ml_models, "credit_scoring")
     assert client.post("/predict", json=valid_payload).status_code == 503
     assert client.get("/health").json()["status"] == "unavailable"
+
+# Optimisation de la construction des données (phase 9)
+
+def test_dataframe_has_training_columns_and_types(valid_payload):
+    """La ligne construite a les 199 colonnes de l'entraînement, dans l'ordre, avec le bon type."""
+    model = ml_models["credit_scoring"]
+    row = model.to_dataframe(valid_payload)
+    assert list(row.columns) == model.input_features
+    assert (row[model.numeric_features].dtypes == "float64").all()
+    assert (row[model.categorical_features].dtypes == "object").all()
+    # Variables non envoyées : valeurs manquantes (NaN), imputées ensuite par le pipeline
+    assert row[model.numeric_features].isna().sum(axis=1).iloc[0] > 150
+    assert row["NAME_CONTRACT_TYPE"].iloc[0] == "Cash loans"

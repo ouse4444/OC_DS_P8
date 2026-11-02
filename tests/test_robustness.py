@@ -38,3 +38,15 @@ def test_unexpected_error_returns_generic_500(client, valid_payload, monkeypatch
     assert response.status_code == 500
     assert response.json() == {"detail": "Internal server error"}
     assert "internal detail" not in response.text
+
+def test_api_does_not_import_mlflow():
+    """Optimisation : l'API charge le modèle sans MLflow (démarrage plus rapide, image plus légère).
+
+    Le test est lancé dans un processus Python séparé, pour ne pas dépendre des modules
+    déjà importés par les autres tests.
+    """
+    import subprocess
+    import sys
+
+    code = "import sys, api.main; sys.exit(1 if 'mlflow' in sys.modules else 0)"
+    assert subprocess.run([sys.executable, "-c", code], check=False).returncode == 0

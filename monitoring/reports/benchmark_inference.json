@@ -1,0 +1,34 @@
+{
+  "startup": {
+    "before_mlflow_s": 0.98,
+    "after_cloudpickle_s": 0.63
+  },
+  "per_request": {
+    "build_row_before": {
+      "p50_ms": 5.35,
+      "p95_ms": 5.76
+    },
+    "build_row_after": {
+      "p50_ms": 0.91,
+      "p95_ms": 0.95
+    },
+    "model_pipeline": {
+      "p50_ms": 2.94,
+      "p95_ms": 3.02
+    },
+    "full_request_before": {
+      "p50_ms": 8.86,
+      "p95_ms": 9.06
+    },
+    "full_request_after": {
+      "p50_ms": 3.9,
+      "p95_ms": 3.99
+    }
+  },
+  "regression": {
+    "clients_compared": 500,
+    "max_probability_gap": 0.0,
+    "auc_before": 0.7855,
+    "auc_after": 0.7855
+  }
+}
