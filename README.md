@@ -150,6 +150,18 @@ Le tableau de bord est lui aussi une **application séparée** de l'API : il lit
 streamlit run dashboard/app.py    # puis http://localhost:8501
 ```
 
+## Optimisation des performances
+
+Le profilage a montré que la mise en forme des données coûtait plus que le modèle lui-même. Deux optimisations ont été déployées, sans aucun écart de prédiction (AUC 0,7855 inchangée) :
+
+| Mesure | Avant | Après |
+|---|---|---|
+| Requête complète, en local (médiane) | 8,9 ms | 3,9 ms (-56 %) |
+| Traitement total en production sur Azure (médiane) | 90,1 ms | 30,4 ms (-66 %) |
+| Taille de l'image Docker de l'API | 1,27 Go | 744 Mo (-41 %) |
+
+Détail de la démarche et des mesures : [docs/rapport_optimisation.md](docs/rapport_optimisation.md). Mesure reproductible : `python scripts/benchmark_inference.py`.
+
 ## Avancement
 
 - [x] Phase 0 : dépôt, environnement, modèle exporté et vérifié, données de référence
@@ -161,4 +173,4 @@ streamlit run dashboard/app.py    # puis http://localhost:8501
 - [x] Phase 6 : déploiement continu sur Azure Container Apps
 - [x] Phase 7 : stockage des données de production (PostgreSQL sur Azure)
 - [x] Phase 8 : simulation de trafic, analyse de la dérive (Evidently) et tableau de bord (Streamlit)
-- [ ] Phase 9 : analyse et optimisation des performances
+- [x] Phase 9 : analyse et optimisation des performances
