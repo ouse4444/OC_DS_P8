@@ -1,0 +1,5 @@
+# Dépendances de l'interface uniquement : elle n'a besoin ni du modèle, ni de MLflow,
+# ni de LightGBM. Son image est donc indépendante de celle de l'API.
+# Gradio est figé à la version déjà validée dans le projet
+gradio==6.14.0
+requests==2.34.2
