@@ -80,6 +80,7 @@ OC_DS_P8/
 ├── src/credit_scoring/   code source du Projet 6
 ├── tests/                tests automatisés (Pytest)
 ├── ui/                   interface Gradio : client de l'API, déployé séparément
+├── dashboard/            tableau de bord Streamlit : suivi de production, déployé séparément
 └── requirements.txt      dépendances, versions figées
 ```
 
@@ -141,6 +142,14 @@ L'interface Gradio est un **client** de l'API, comme le serait un tableau de bor
 API_URL=http://127.0.0.1:8000 python -m ui.app    # puis http://127.0.0.1:7860
 ```
 
+## Tableau de bord de suivi (Streamlit)
+
+Le tableau de bord est lui aussi une **application séparée** de l'API : il lit la base PostgreSQL de production (variable `DATABASE_URL`) et interroge l'API par HTTP (variable `API_URL`) pour afficher son état. Il présente le volume de requêtes, le taux d'erreur, la distribution des scores, le taux de refus, les temps de réponse et la dérive des principales variables (PSI calculé par rapport au profil agrégé `dashboard/reference_profile.json`, qui ne contient aucune donnée client).
+
+```bash
+streamlit run dashboard/app.py    # puis http://localhost:8501
+```
+
 ## Avancement
 
 - [x] Phase 0 : dépôt, environnement, modèle exporté et vérifié, données de référence
@@ -150,6 +159,6 @@ API_URL=http://127.0.0.1:8000 python -m ui.app    # puis http://127.0.0.1:7860
 - [x] Phase 4 : conteneurisation Docker (API et interface)
 - [x] Phase 5 : intégration continue (GitHub Actions)
 - [x] Phase 6 : déploiement continu sur Azure Container Apps
-- [ ] Phase 7 : stockage des données de production
-- [ ] Phase 8 : analyse de la dérive et tableau de bord
+- [x] Phase 7 : stockage des données de production (PostgreSQL sur Azure)
+- [x] Phase 8 : simulation de trafic, analyse de la dérive (Evidently) et tableau de bord (Streamlit)
 - [ ] Phase 9 : analyse et optimisation des performances
