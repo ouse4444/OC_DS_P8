@@ -1,0 +1,8 @@
+# Dépendances du suivi de production (notebook de dérive, tableau de bord).
+# Elles ne sont pas installées dans l'image de l'API, qui reste légère.
+# Versions vérifiées compatibles avec celles du modèle (pandas, NumPy, scikit-learn)
+-r ../requirements.txt
+evidently==0.7.23
+streamlit==1.66.1
+python-dotenv==1.2.4
+matplotlib==3.11.2
