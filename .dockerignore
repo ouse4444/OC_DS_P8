@@ -7,7 +7,9 @@ data/
 # Secrets
 .env
 
-# Éléments inutiles pour faire tourner l'API
+# Éléments inutiles pour faire tourner l'API, dont les clients (interface, tableau de bord)
+ui/
+dashboard/
 notebooks/
 scripts/
 tests/
