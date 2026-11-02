@@ -1,21 +1,25 @@
 # Dépendances de l'API (image de production). L'interface Gradio et le tableau de bord
 # sont des clients séparés, avec leurs propres dépendances : ils ne sont pas installés ici.
 
-# Bibliothèques du modèle : versions identiques au Projet 6 (rechargement fidèle du modèle)
+# Bibliothèques du modèle : versions identiques au Projet 6 (rechargement fidèle du modèle).
+# Le modèle est lu avec cloudpickle, dans la version utilisée par MLflow à l'export
+# (model/requirements.txt) : MLflow n'est plus nécessaire dans l'image de production
 lightgbm==4.6.0
 scikit-learn==1.8.0
-mlflow==3.12.0
 pandas==2.3.3
 numpy==2.4.6
+cloudpickle==3.1.2
+# SciPy (dépendance de scikit-learn) : version de l'environnement d'export du modèle
+scipy==1.17.1
 
 # API
 fastapi==0.143.0
 uvicorn==0.54.0
 pydantic==2.14.0
-# Starlette est figée explicitement : MLflow 3.12 exige starlette<1.0
+# Starlette (base de FastAPI) est figée pour la reproductibilité
 starlette==0.52.1
 
-# Stockage des prédictions de production (PostgreSQL). SQLAlchemy est déjà installée
-# par MLflow : la version est alignée pour éviter tout conflit
+# Stockage des prédictions de production (PostgreSQL). Même version de SQLAlchemy que
+# celle installée avec MLflow dans l'environnement de développement, pour éviter tout conflit
 sqlalchemy==2.1.6
 psycopg[binary]==3.3.6

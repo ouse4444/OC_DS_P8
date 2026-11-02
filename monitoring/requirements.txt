@@ -2,6 +2,8 @@
 # Elles ne sont pas installées dans l'image de l'API, qui reste légère.
 # Versions vérifiées compatibles avec celles du modèle (pandas, NumPy, scikit-learn)
 -r ../requirements.txt
+# MLflow : suivi des expériences et registre du modèle (notebooks et scripts d'analyse)
+mlflow==3.12.0
 evidently==0.7.23
 streamlit==1.66.1
 python-dotenv==1.2.4

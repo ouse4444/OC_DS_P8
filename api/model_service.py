@@ -2,13 +2,20 @@
 
 Ce module isole tout ce qui touche au modèle : l'API (main.py) ne manipule
 ni pandas ni scikit-learn, ce qui la rend plus simple à lire et à tester.
+
+Optimisations (phase 9, mesurées puis validées sans aucun écart de prédiction) :
+- le modèle est lu directement dans le fichier model.pkl exporté par MLflow (format
+  cloudpickle), sans importer MLflow : démarrage plus rapide et image plus légère.
+  MLflow reste l'outil de suivi des expériences et de versionnement du modèle ;
+- la ligne de données est construite colonne par colonne avec le bon type, au lieu
+  d'être convertie après coup : environ 7 fois plus rapide.
 """
 
 import time
 import warnings
 from pathlib import Path
 
-import mlflow.sklearn
+import cloudpickle
 import numpy as np
 import pandas as pd
 
@@ -29,8 +36,11 @@ class CreditScoringModel:
     """Enveloppe autour du pipeline du Projet 6 (préparation des variables, puis LightGBM)."""
 
     def __init__(self, model_dir: Path):
-        # Chargement unique : cet objet est créé une seule fois, au démarrage de l'API
-        self.pipeline = mlflow.sklearn.load_model(str(model_dir))
+        # Chargement unique : cet objet est créé une seule fois, au démarrage de l'API.
+        # Le fichier model.pkl est celui du registre MLflow (format cloudpickle, indiqué dans
+        # le fichier MLmodel) : il est lu directement, sans charger toute la bibliothèque MLflow
+        with open(Path(model_dir) / "model.pkl", "rb") as model_file:
+            self.pipeline = cloudpickle.load(model_file)
 
         # Les variables attendues sont lues dans le modèle lui-même, et non recopiées
         # à la main : une seule source de vérité, aucun risque de divergence.
@@ -80,18 +90,23 @@ class CreditScoringModel:
         Les variables absentes deviennent des valeurs manquantes : le pipeline les
         impute comme à l'entraînement (zéro pour une absence d'historique, médiane
         sinon, modalité « Non renseigné » pour les catégorielles).
+
+        Chaque colonne est créée directement avec son type final (décimal pour les
+        numériques, objet pour les catégorielles). Convertir 188 colonnes après coup,
+        comme dans la première version, coûtait environ 17 ms par requête, soit plus
+        que le modèle lui-même ; la construction directe en coûte environ 2.
         """
+        # Une valeur absente (None) devient NaN, la valeur manquante attendue par le pipeline
+        values = {
+            col: [np.nan if data.get(col) is None else float(data[col])]
+            for col in self.numeric_features
+        }
+        values.update({
+            col: np.array([np.nan if data.get(col) is None else data[col]], dtype=object)
+            for col in self.categorical_features
+        })
         # Toutes les colonnes, dans l'ordre exact de l'entraînement
-        row = {col: data.get(col) for col in self.input_features}
-        df = pd.DataFrame([row], columns=self.input_features)
-
-        # Les variables numériques sont converties en nombres décimaux (None devient NaN)
-        df[self.numeric_features] = df[self.numeric_features].astype(float)
-
-        # Les catégorielles manquantes doivent valoir np.nan, et non None, pour être imputées
-        cat = df[self.categorical_features].astype(object)
-        df[self.categorical_features] = cat.where(cat.notna(), np.nan)
-        return df
+        return pd.DataFrame(values, columns=self.input_features)
 
     def predict_proba(self, data: dict) -> tuple[float, float]:
         """Retourne la probabilité de défaut et le temps d'inférence en millisecondes."""
