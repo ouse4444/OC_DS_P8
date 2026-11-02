@@ -1,3 +1,6 @@
+# Dépendances de l'API (image de production). L'interface Gradio et le tableau de bord
+# sont des clients séparés, avec leurs propres dépendances : ils ne sont pas installés ici.
+
 # Bibliothèques du modèle : versions identiques au Projet 6 (rechargement fidèle du modèle)
 lightgbm==4.6.0
 scikit-learn==1.8.0
@@ -11,10 +14,3 @@ uvicorn==0.54.0
 pydantic==2.14.0
 # Starlette est figée explicitement : MLflow 3.12 exige starlette<1.0
 starlette==0.52.1
-
-# Interface de démonstration. Gradio 6.14.0 est la version la plus récente compatible
-# avec starlette<1.0 ; les versions suivantes exigent starlette>=1.0.1 (conflit avec MLflow)
-gradio==6.14.0
-
-# Scripts de test manuel de l'API
-requests==2.34.2

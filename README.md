@@ -25,7 +25,7 @@ flowchart LR
     end
     subgraph PROD["Production : Azure"]
         G["API FastAPI<br/>/predict et /health"]
-        H["Interface Gradio<br/>/ui"]
+        H["Interface Gradio<br/>client séparé"]
         I[("PostgreSQL<br/>données de production")]
     end
     subgraph MON["Monitoring"]
@@ -35,7 +35,7 @@ flowchart LR
     end
     B -->|push ou pull request| C
     F --> G
-    H --> G
+    H -->|HTTP| G
     U["Département<br/>Crédit Express"] -->|requête client| G
     G -->|entrées, score, latence, erreurs| I
     I --> J
@@ -69,6 +69,7 @@ Le modèle exporté a été vérifié : il reproduit à l'identique la matrice d
 
 ```
 OC_DS_P8/
+├── .github/workflows/    pipeline CI/CD
 ├── api/                  API FastAPI (dossier de déploiement)
 ├── data/processed/       données de référence (locales, non versionnées)
 ├── docs/                 documentation et captures d'écran
@@ -77,7 +78,8 @@ OC_DS_P8/
 ├── notebooks/            notebooks d'analyse
 ├── scripts/              scripts utilitaires
 ├── src/credit_scoring/   code source du Projet 6
-├── tests/                tests automatisés (à venir)
+├── tests/                tests automatisés (Pytest)
+├── ui/                   interface Gradio : client de l'API, déployé séparément
 └── requirements.txt      dépendances, versions figées
 ```
 
@@ -130,15 +132,24 @@ python scripts/export_sample_clients.py    # extrait 10 clients du jeu de test d
 python scripts/test_api_local.py           # l'API doit être lancée dans un autre terminal
 ```
 
+## Interface de test (Gradio)
+
+L'interface Gradio est un **client** de l'API, comme le serait un tableau de bord ou une application métier : elle tourne dans son propre conteneur et appelle l'API par HTTP, à l'adresse donnée par la variable d'environnement `API_URL`. L'API reste ainsi un service autonome, utilisable par n'importe quel client : si l'interface est arrêtée, l'API continue de répondre.
+
+```bash
+# L'API doit tourner dans un autre terminal
+API_URL=http://127.0.0.1:8000 python -m ui.app    # puis http://127.0.0.1:7860
+```
+
 ## Avancement
 
 - [x] Phase 0 : dépôt, environnement, modèle exporté et vérifié, données de référence
 - [x] Phase 1 : README et architecture
-- [x] Phase 2 : API FastAPI testée en local (interface Gradio à venir)
-- [ ] Phase 3 : tests automatisés
-- [ ] Phase 4 : conteneurisation Docker
-- [ ] Phase 5 : intégration continue
-- [ ] Phase 6 : déploiement sur Azure
+- [x] Phase 2 : API FastAPI testée en local, interface Gradio (client séparé)
+- [x] Phase 3 : tests automatisés (Pytest, couverture 100 %)
+- [x] Phase 4 : conteneurisation Docker (API et interface)
+- [x] Phase 5 : intégration continue (GitHub Actions)
+- [x] Phase 6 : déploiement continu sur Azure Container Apps
 - [ ] Phase 7 : stockage des données de production
 - [ ] Phase 8 : analyse de la dérive et tableau de bord
 - [ ] Phase 9 : analyse et optimisation des performances

@@ -3,20 +3,20 @@
 Lancement en local, depuis la racine du projet :
     uvicorn api.main:app --reload
 Documentation interactive : http://127.0.0.1:8000/docs
-Interface de démonstration : http://127.0.0.1:8000/ui
+
+L'API est un service autonome : ses clients (interface Gradio, tableau de bord,
+applications métier) sont des applications séparées qui l'appellent par HTTP.
 """
 
 import logging
 from contextlib import asynccontextmanager
 
-import gradio as gr
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from api.config import DECISION_THRESHOLD, MODEL_DIR, MODEL_NAME, MODEL_VERSION
 from api.model_service import CreditScoringModel
 from api.schemas import ClientData, HealthResponse, PredictionResponse
-from api.ui import build_demo
 
 logger = logging.getLogger("credit_scoring_api")
 logging.basicConfig(level=logging.INFO)
@@ -76,7 +76,6 @@ def root():
         "message": "Credit Scoring API - Prêt à Dépenser",
         "docs": "/docs",
         "health": "/health",
-        "ui": "/ui",
     }
 
 
@@ -104,7 +103,7 @@ def features():
 
 
 def run_prediction(client: ClientData) -> PredictionResponse:
-    """Logique de prédiction, partagée par la route /predict et l'interface Gradio."""
+    """Logique de prédiction de la route /predict."""
     model = get_model()
 
     # exclude_unset : seules les variables réellement envoyées sont transmises,
@@ -135,7 +134,3 @@ def predict(client: ClientData):
     """Calcule la probabilité de défaut d'un client et la décision de crédit."""
     return run_prediction(client)
 
-
-# Interface Gradio montée sur /ui, dans la même application : un seul conteneur à déployer.
-# Elle doit être montée après la déclaration des routes de l'API.
-app = gr.mount_gradio_app(app, build_demo(run_prediction), path="/ui")
