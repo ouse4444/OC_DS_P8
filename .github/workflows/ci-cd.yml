@@ -74,17 +74,24 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # Taille de l'image : suivie à chaque exécution (indicateur de la phase d'optimisation)
+      - name: Report image size
+        run: |
+          docker image ls credit-scoring-api:ci --format "API image size: {{.Size}}"
+
       # Test de fumée : le conteneur démarre-t-il, et le modèle est-il chargé ?
+      # Le temps jusqu'au premier /health réussi est affiché (temps de démarrage du service)
       - name: Smoke test the container
         run: |
+          START=$(date +%s.%N)
           docker run -d --name api -p 8000:8000 credit-scoring-api:ci
-          for i in $(seq 1 30); do
+          for i in $(seq 1 60); do
             if curl -fs http://127.0.0.1:8000/health | grep -q '"model_loaded":true'; then
-              echo "API is up and the model is loaded"
+              echo "API is up and the model is loaded after $(awk "BEGIN {print $(date +%s.%N) - $START}") seconds"
               docker stop api
               exit 0
             fi
-            sleep 2
+            sleep 0.5
           done
           echo "API did not start in time"
           docker logs api
