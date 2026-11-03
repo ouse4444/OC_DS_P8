@@ -96,7 +96,7 @@ OC_DS_P8/
 ├── notebooks/                    modèle du Projet 6 (00, pour référence), vérification du modèle (01), analyse de dérive (02)
 ├── monitoring/reports/           rapports Evidently, tableaux de dérive, mesures de performance
 ├── scripts/                      reconstruction des données, simulation de trafic, mesures
-├── docs/                         rapport d'optimisation
+├── docs/                         stratégie de stockage, rapport d'optimisation
 ├── src/credit_scoring/           code source du Projet 6
 ├── data/                         données locales, jamais versionnées
 ├── Dockerfile                    image de l'API
@@ -206,6 +206,8 @@ La région France Central garde les données dans l'Union européenne. L'adresse
 ## Stockage des données de production
 
 Table `predictions` (créée automatiquement par l'API) : date, identifiant de requête, nom et version du modèle, code de réponse, probabilité, décision, seuil, temps d'inférence, temps total, entrées reçues (JSONB) et message d'erreur. L'identifiant de requête relie la réponse renvoyée au client et la ligne en base. Les rejets (422) et les erreurs (503, 500) sont enregistrés comme les succès : ils font partie du suivi.
+
+La stratégie complète (exigences du suivi, choix de la solution, volume, coût, durée de conservation, protection des données) est décrite dans [docs/strategie_stockage.md](docs/strategie_stockage.md).
 
 ## Simulation de trafic et analyse de dérive
 
