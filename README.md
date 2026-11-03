@@ -93,7 +93,7 @@ OC_DS_P8/
 ├── dashboard/                    tableau de bord Streamlit : suivi de production, image séparée
 ├── model/                        modèle exporté depuis le registre MLflow du Projet 6
 ├── tests/                        tests automatisés (Pytest)
-├── notebooks/                    vérification du modèle (01), analyse de dérive (02)
+├── notebooks/                    modèle du Projet 6 (00, pour référence), vérification du modèle (01), analyse de dérive (02)
 ├── monitoring/reports/           rapports Evidently, tableaux de dérive, mesures de performance
 ├── scripts/                      reconstruction des données, simulation de trafic, mesures
 ├── docs/                         rapport d'optimisation
